@@ -8,19 +8,28 @@ class App extends Component {
   };
 
   async componentDidMount() {
-    const searchTerm = "trees"
-    const response= await unsplash.get("/search/photos", {
-      params: {query: searchTerm}
-    });
-    this.setState({resultList: response.data.results})
+    const searchTerm="trees"
+    try{
+      const response = await fetch(`https://api.unsplash.com/search/photos?query=${searchTerm}`,{
+        headers: {
+          Authorization: `Client-ID ${process.env.REACT_APP_API_KEY}`
+        }
+      })
+      const json = await response.json()
+      this.setState({resultList: json.results})
+    }
+    catch(err){
+      console.log(err)
+    }
+
   }
 
   render() {
     const { resultList } = this.state;
     return (
       <div className="container">
-        {resultList.map(result => (
-          <Card imageUrl={result.urls.small} title={result.description} />
+        {resultList.map((result, index) => (
+          <Card key={index} imageUrl={result.urls.small} title={result.description} />
         ))}
       </div>
     );
