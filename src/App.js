@@ -15,11 +15,12 @@ class App extends Component {
           Authorization: `Client-ID ${process.env.REACT_APP_API_KEY}`
         }
       })
+      if(!response.ok) throw Error(`Status error: ${response.status}`)
       const json = await response.json()
       this.setState({resultList: json.results})
     }
     catch(err){
-      console.log(err)
+      console.log(err.message)
     }
 
   }
